@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-wrapper">
+            <h2>Admin Login</h2>
+            <form onsubmit="return checkLogin()">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+            <a href="index.html" class="back-to-portfolio">Voltar para o Portfolio</a>
+        </div>
+    </div>
+
+    <script>
+        function checkLogin() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+
+            console.log("Username:", username);
+            console.log("Password:", password);
+
+            // Verifica se o username e password estão corretos
+            if (username === "Victor" && password === "123456789") {
+                // Redireciona para a página "Cadastro.html"
+                window.location.href = "Cadastro.html";
+                return false; // Impede o envio do formulário
+            } else {
+                // Caso contrário, exibe uma mensagem de erro
+                alert("Usuário ou senha incorretos. Tente novamente.");
+                return false; // Impede o envio do formulário
+            }
+        }
+    </script>
+</body>
+</html>

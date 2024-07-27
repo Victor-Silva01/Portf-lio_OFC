@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Projeto</title>
+    <style>
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(216, 9, 9, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .input-group textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .back-to-portfolio {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .back-to-portfolio:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cadastro de Projeto</h1>
+        <form id="project-form">
+            <div class="input-group">
+                <label for="project-title">Título do Projeto</label>
+                <input type="text" id="project-title" name="project-title" required>
+            </div>
+            <div class="input-group">
+                <label for="project-photo">Foto do Projeto</label>
+                <input type="file" id="project-photo" name="project-photo" accept="image/*" required>
+            </div>
+            <div class="input-group">
+                <label for="language-used">Linguagem Usada</label>
+                <select id="language-used" name="language-used" required>
+                    <option value="python">Python</option>
+                    <option value="html">HTML</option>
+                    <option value="css">CSS</option>
+                    <option value="javascript">JavaScript</option>
+                    <option value="react-native">React Native</option>
+                    <option value="typescript">TypeScript</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="project-type">Tipo de Projeto</label>
+                <select id="project-type" name="project-type" required>
+                    <option value="web">Web</option>
+                    <option value="mobile">Mobile</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="description">Descrição</label>
+                <textarea id="description" name="description" required></textarea>
+            </div>
+            <button type="button" onclick="saveProject()">Salvar Projeto</button>
+        </form>
+        <a href="index.html" class="back-to-portfolio">Voltar para o Portfolio</a>
+    </div>
+
+    <script>
+        function saveProject() {
+            const title = document.getElementById("project-title").value;
+            const photo = document.getElementById("project-photo").files[0];
+            const language = document.getElementById("language-used").value;
+            const type = document.getElementById("project-type").value;
+            const description = document.getElementById("description").value;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imageUrl = e.target.result;
+                const projectCard = `
+                    <div class="project-card">
+                        <img src="${imageUrl}" alt="Foto do Projeto">
+                        <h3>${title}</h3>
+                        <p><strong>Linguagem Usada:</strong> ${language}</p>
+                        <p><strong>Tipo de Projeto:</strong> ${type}</p>
+                        <p>${description}</p>
+                    </div>
+                `;
+
+                localStorage.setItem('projectCard', projectCard);
+                window.location.href = 'index.html';
+            };
+
+            reader.readAsDataURL(photo);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Victor Emanuel - Portfólio</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="hero-header">
+        <div class="wrapper">
+            <header>
+                <div class="logo">
+                    <div class="logo-text">Victor Emanuel</div>
+                </div>
+                <nav>
+                    <div class="togglebtn">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <ul class="navlinks">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="sobre.html">Sobre mim</a></li>
+                        <li><a href="projetos.html">Projetos</a></li>
+                        <li><a href="contato.html">Contato</a></li>
+                        <li><a href="admin.html">Admin</a></li>
+                    </ul>
+                </nav>
+            </header>
+            <div class="container">
+                <div class="hero-pic">
+                    <img src="img/foto_perfil.jpg" alt="Foto de Perfil">
+                </div>
+                <div class="hero-text">
+                    <h5>Hi, I'm a <span class="input">Frontend Developer</span></h5>
+                    <h1>Victor Emanuel</h1>
+                    <p>
+                        Olá! Sou Victor Emanuel, apaixonado por desenvolvimento front-end. Tenho habilidades em HTML, CSS, JavaScript, Java, Python, PostgreSQL e Git.
+                        Com uma abordagem orientada para resultados, sou pró-ativo, determinado e sempre em busca de inovação. Valorizo a comunicação eficaz e a empatia, o que me torna um excelente colaborador em equipes.
+                        Estou pronto para enfrentar novos desafios e contribuir para projetos inovadores. Vamos construir o futuro juntos?
+                    </p>
+                    <div class="btn-group">
+                        <a href="cv/victor_emanuel_cv.pdf" class="btn active">Download CV</a>
+                        <a href="contato.html" class="btn">Contato</a>
+                    </div>
+                    <div class="social">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-dribbble"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sobre Mim Section -->
+    <section class="about-me">
+        <div class="wrapper">
+            <h2>Sobre Mim</h2>
+            <p>
+                Sou um profissional orientado para resultados e apaixonado por superar desafios. Com uma abordagem pró-ativa e determinada, busco alcançar objetivos constantemente. Minha autoconfiança e competitividade me levam a enfrentar situações complexas com coragem, buscando soluções inovadoras. Com ousadia, exploro novas abordagens para resolver problemas e sair da zona de conforto.
+            </p>
+            <h3>Habilidades</h3>
+            <ul>
+                <li>Trabalho em equipe</li>
+                <li>Liderança</li>
+                <li>Pensamento criativo</li>
+                <li>Resolução de problemas</li>
+                <li>Programação</li>
+            </ul>
+            <h3>Competências Técnicas</h3>
+            <p>
+                Linguagens de Programação: HTML, CSS, JavaScript, Java e Python.<br>
+                Bancos de Dados: Experiência em PostgreSQL.<br>
+                Controle de Versão: Proficiência em Git.<br>
+                Desenvolvimento Web: Experiência acadêmica e prática em desenvolvimento front-end, com foco em design responsivo e acessibilidade.
+            </p>
+            <h3>Idiomas</h3>
+            <p>
+                Português: Nativo<br>
+                Inglês: Básico<br>
+                Espanhol: Básico
+            </p>
+            <h3>Formação Acadêmica</h3>
+            <p>
+                Bacharelado em Engenharia de Software<br>
+                Universidade Católica do Tocantins<br>
+                2021–2025
+            </p>
+            <h3>Experiência</h3>
+            <p>
+                Desenvolvedor Front-End<br>
+                Julho de 2022<br>
+                Responsável pela implementação de interfaces de usuário eficientes, garantindo que os proprietários de animais de companhia e profissionais de saúde animal pudessem interagir de maneira eficaz com a plataforma. Desenvolvi minha paixão por programação durante a formação acadêmica, atuando como Desenvolvedor Web em um projeto focado em um site de pagamentos. Contribuí para a criação de interfaces eficazes e intuitivas, aplicando princípios sólidos de design responsivo e acessibilidade.
+            </p>
+            <p>
+                Meu objetivo é continuar me desenvolvendo como engenheiro de software, contribuindo para projetos inovadores e desafiadores que façam a diferença. Estou sempre aberto a novas oportunidades de aprendizado e colaboração. Vamos construir o futuro juntos?
+            </p>
+        </div>
+    </section>
+
+    <section class="projects">
+        <div class="wrapper">
+            <h2>Projetos</h2>
+            <p>Aqui estão meus melhores projetos:</p>
+            <div id="projects-container"></div>
+        </div>
+    </section>
+
+    <!-- Typed.js for typing text effect -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.10/typed.min.js"></script>
+    <script>
+        /** Creating button click show/hide navbar **/
+        var togglebtn = document.querySelector(".togglebtn");
+        var nav = document.querySelector(".navlinks");
+
+        togglebtn.addEventListener("click", function() {
+            this.classList.toggle("click");
+            nav.classList.toggle("open");
+        });
+
+        var typed = new Typed(".input", {
+            strings: ["Frontend Developer", "Eng. Software", "Web Developer"],
+            typeSpeed: 70,
+            backSpeed: 55,
+            loop: true
+        });
+
+        // Display saved projects
+        document.addEventListener("DOMContentLoaded", function () {
+            const projectsContainer = document.getElementById("projects-container");
+            const projectCard = localStorage.getItem('projectCard');
+
+            if (projectCard) {
+                projectsContainer.innerHTML += projectCard;
+                localStorage.removeItem('projectCard');
+            }
+        });
+    </script>
+</body>
+</html>
