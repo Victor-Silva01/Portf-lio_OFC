@@ -9,6 +9,7 @@
 body {
     overflow-x: hidden;
 }
+
 /* Hero Header Styles */
 .hero-header {
     width: 100%;
@@ -139,6 +140,7 @@ nav .navlinks li a {
 .social a:hover {
     color: #005bb5;
 }
+
 /* About Me Section Styles */
 .about-me {
     background-color: #333;
@@ -172,6 +174,7 @@ nav .navlinks li a {
     font-size: 1.1rem;
     margin-bottom: 10px;
 }
+
 /* Projects Section Styles */
 .projects {
     background-color: #333;
@@ -192,6 +195,46 @@ nav .navlinks li a {
     margin-bottom: 30px;
     line-height: 1.6;
 }
+
+/* Estilos para os cartões de projeto */
+.project-cards-container {
+    display: flex;
+    flex-wrap: wrap; /* Permite que os cartões quebrem para a linha seguinte se não houver espaço suficiente */
+    justify-content: center; /* Centraliza os cartões horizontalmente */
+    gap: 16px; /* Espaçamento entre os cartões */
+}
+.project-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 12px;
+    text-align: center;
+    background-color: #fff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    max-width: calc(33.333% - 16px); /* Três cartões por linha com espaçamento */
+    box-sizing: border-box; /* Inclui o padding e border na largura total */
+}
+.project-card img {
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #ddd;
+}
+.project-card h3 {
+    margin: 12px 0 8px;
+    font-size: 1.1em; /* Ajuste o tamanho da fonte se necessário */
+    color: #333;
+}
+.project-card p {
+    color: #666;
+    margin: 8px 0;
+    font-size: 0.9em; /* Ajuste o tamanho da fonte se necessário */
+}
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
 /* Login Container Styles */
 .login-container {
     display: flex;
@@ -239,6 +282,7 @@ button {
 button:hover {
     background-color: #005bb5;
 }
+
 /* Responsive Design for Small Screens */
 @media (max-width: 930px) {
     nav .togglebtn {

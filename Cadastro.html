@@ -106,18 +106,34 @@
                 <label for="description">Descrição</label>
                 <textarea id="description" name="description" required></textarea>
             </div>
-            <button type="button" onclick="saveProject()">Salvar Projeto</button>
+            <button type="button" id="save-button">Salvar Projeto</button>
         </form>
         <a href="index.html" class="back-to-portfolio">Voltar para o Portfolio</a>
     </div>
 
     <script>
+        document.getElementById("save-button").addEventListener("click", function() {
+            saveProject();
+        });
+
         function saveProject() {
+            console.log("Salvar projeto iniciado...");
             const title = document.getElementById("project-title").value;
             const photo = document.getElementById("project-photo").files[0];
             const language = document.getElementById("language-used").value;
             const type = document.getElementById("project-type").value;
             const description = document.getElementById("description").value;
+
+            console.log("Título: ", title);
+            console.log("Foto: ", photo);
+            console.log("Linguagem: ", language);
+            console.log("Tipo: ", type);
+            console.log("Descrição: ", description);
+
+            if (!photo) {
+                console.error("Nenhuma foto selecionada!");
+                return;
+            }
 
             const reader = new FileReader();
             reader.onload = function (e) {
@@ -132,8 +148,14 @@
                     </div>
                 `;
 
-                localStorage.setItem('projectCard', projectCard);
-                window.location.href = 'index.html';
+                // Salvar no localStorage
+                console.log("Salvando projeto no localStorage...");
+                const projects = JSON.parse(localStorage.getItem('projects')) || [];
+                projects.push(projectCard);
+                localStorage.setItem('projects', JSON.stringify(projects));
+
+                // Limpar o formulário
+                document.getElementById("project-form").reset();
             };
 
             reader.readAsDataURL(photo);

@@ -108,14 +108,14 @@
         <div class="wrapper">
             <h2>Projetos</h2>
             <p>Aqui estão meus melhores projetos:</p>
-            <div id="projects-container"></div>
+            <div id="project-cards-container" class="project-cards-container"></div>
         </div>
     </section>
 
     <!-- Typed.js for typing text effect -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.10/typed.min.js"></script>
     <script>
-        /** Creating button click show/hide navbar **/
+        // Menu Responsivo
         var togglebtn = document.querySelector(".togglebtn");
         var nav = document.querySelector(".navlinks");
 
@@ -124,6 +124,7 @@
             nav.classList.toggle("open");
         });
 
+        // Efeito de Texto Digitado
         var typed = new Typed(".input", {
             strings: ["Frontend Developer", "Eng. Software", "Web Developer"],
             typeSpeed: 70,
@@ -131,16 +132,55 @@
             loop: true
         });
 
-        // Display saved projects
+        // Exibir Projetos Salvos
         document.addEventListener("DOMContentLoaded", function () {
-            const projectsContainer = document.getElementById("projects-container");
-            const projectCard = localStorage.getItem('projectCard');
+            const projectsContainer = document.getElementById("project-cards-container");
+            const projects = JSON.parse(localStorage.getItem('projects')) || [];
 
-            if (projectCard) {
+            projects.forEach(function (projectCard) {
                 projectsContainer.innerHTML += projectCard;
-                localStorage.removeItem('projectCard');
-            }
+            });
         });
+
+        // Função para Salvar Projetos
+        function saveProject() {
+            const title = document.getElementById("project-title").value;
+            const photo = document.getElementById("project-photo").files[0];
+            const language = document.getElementById("language-used").value;
+            const type = document.getElementById("project-type").value;
+            const description = document.getElementById("description").value;
+
+            if (!title || !photo || !language || !type || !description) {
+                alert("Por favor, preencha todos os campos!");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imageUrl = e.target.result;
+                const projectCard = `
+                    <div class="project-card">
+                        <img src="${imageUrl}" alt="Foto do Projeto">
+                        <h3>${title}</h3>
+                        <p><strong>Linguagem Usada:</strong> ${language}</p>
+                        <p><strong>Tipo de Projeto:</strong> ${type}</p>
+                        <p>${description}</p>
+                    </div>
+                `;
+
+                const projects = JSON.parse(localStorage.getItem('projects')) || [];
+                projects.push(projectCard);
+                localStorage.setItem('projects', JSON.stringify(projects));
+
+                // Limpar o formulário
+                document.getElementById("project-form").reset();
+            };
+
+            reader.readAsDataURL(photo);
+        }
+
+        // Adicionar um ouvinte ao botão de salvar
+        document.getElementById("save-button").addEventListener("click", saveProject);
     </script>
 </body>
 </html>
