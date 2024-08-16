@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Projeto</title>
     <style>
+        /* CSS Global Styles */
         body {
             background-color: white;
             font-family: Arial, sans-serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            height: 100vh;
             margin: 0;
+            padding: 20px;
         }
         .container {
             background-color: #f9f9f9;
@@ -21,8 +22,9 @@
             box-shadow: 0 2px 4px rgba(216, 9, 9, 0.1);
             max-width: 500px;
             width: 100%;
+            margin-bottom: 20px;
         }
-        h1 {
+        h1, h2 {
             text-align: center;
             color: #333;
         }
@@ -70,6 +72,67 @@
         .back-to-portfolio:hover {
             text-decoration: underline;
         }
+        .projects-container {
+            width: 100%;
+            max-width: 500px;
+            margin-top: 20px;
+        }
+        .project-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 12px;
+            text-align: center;
+            background-color: #fff;
+            margin-bottom: 16px;
+        }
+        .project-card img {
+            width: 100%;
+            height: auto;
+            border-bottom: 1px solid #ddd;
+        }
+        .project-card h3 {
+            margin: 12px 0 8px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        .project-card p {
+            color: #666;
+            margin: 8px 0;
+            font-size: 0.9em;
+        }
+        .project-card button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+        }
+        .project-card button:hover {
+            background-color: #0056b3;
+        }
+        .project-card button.edit {
+            background-color: #ffc107;
+        }
+        .project-card button.edit:hover {
+            background-color: #e0a800;
+        }
+        .project-card button.delete {
+            background-color: #dc3545;
+        }
+        .project-card button.delete:hover {
+            background-color: #c82333;
+        }
+        /* Mensagem de sucesso */
+        .success-message {
+            color: green;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -108,7 +171,14 @@
             </div>
             <button type="button" id="save-button">Salvar Projeto</button>
         </form>
+        <div id="success-message" class="success-message" style="display: none;">
+            Projeto adicionado com sucesso!
+        </div>
         <a href="index.html" class="back-to-portfolio">Voltar para o Portfolio</a>
+    </div>
+
+    <div class="projects-container" id="projects-container">
+        <h2>Projetos Salvos</h2>
     </div>
 
     <script>
@@ -116,19 +186,16 @@
             saveProject();
         });
 
-        function saveProject() {
-            console.log("Salvar projeto iniciado...");
+        document.addEventListener("DOMContentLoaded", function() {
+            loadProjects();
+        });
+
+        async function saveProject() {
             const title = document.getElementById("project-title").value;
             const photo = document.getElementById("project-photo").files[0];
             const language = document.getElementById("language-used").value;
             const type = document.getElementById("project-type").value;
             const description = document.getElementById("description").value;
-
-            console.log("Título: ", title);
-            console.log("Foto: ", photo);
-            console.log("Linguagem: ", language);
-            console.log("Tipo: ", type);
-            console.log("Descrição: ", description);
 
             if (!photo) {
                 console.error("Nenhuma foto selecionada!");
@@ -136,30 +203,97 @@
             }
 
             const reader = new FileReader();
-            reader.onload = function (e) {
+            reader.onload = async function (e) {
                 const imageUrl = e.target.result;
-                const projectCard = `
-                    <div class="project-card">
-                        <img src="${imageUrl}" alt="Foto do Projeto">
-                        <h3>${title}</h3>
-                        <p><strong>Linguagem Usada:</strong> ${language}</p>
-                        <p><strong>Tipo de Projeto:</strong> ${type}</p>
-                        <p>${description}</p>
-                    </div>
-                `;
+                
+                // Preparando os dados para envio ao backend
+                const projectData = {
+                    title: title,
+                    imageUrl: imageUrl,
+                    language: language,
+                    type: type,
+                    description: description
+                };
 
-                // Salvar no localStorage
-                console.log("Salvando projeto no localStorage...");
-                const projects = JSON.parse(localStorage.getItem('projects')) || [];
-                projects.push(projectCard);
-                localStorage.setItem('projects', JSON.stringify(projects));
+                try {
+                    const response = await fetch('http://localhost:3000/projetos', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(projectData)
+                    });
 
-                // Limpar o formulário
-                document.getElementById("project-form").reset();
+                    const result = await response.json();
+                    if (response.ok) {
+                        document.getElementById("success-message").style.display = "block"; // Exibir a mensagem de sucesso
+                        setTimeout(() => {
+                            document.getElementById("success-message").style.display = "none"; // Ocultar a mensagem após 3 segundos
+                        }, 3000);
+                        document.getElementById("project-form").reset(); // Limpa o formulário
+                        loadProjects(); // Recarregar os projetos para incluir o novo
+                    } else {
+                        console.error(result.message);
+                    }
+                } catch (error) {
+                    console.error('Erro ao salvar o projeto:', error);
+                }
             };
 
-            reader.readAsDataURL(photo);
+            reader.readAsDataURL(photo); // Convertendo a imagem em base64 para envio
+        }
+
+        async function loadProjects() {
+            try {
+                const response = await fetch('http://localhost:3000/projetos');
+                const result = await response.json();
+
+                if (response.ok) {
+                    displayProjects(result.data);
+                } else {
+                    console.error(result.message);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar projetos:', error);
+            }
+        }
+
+        function displayProjects(projects) {
+            const projectsContainer = document.getElementById("projects-container");
+            projectsContainer.innerHTML = '<h2>Projetos Salvos</h2>';
+
+            projects.forEach(project => {
+                const projectCard = document.createElement('div');
+                projectCard.className = 'project-card';
+                projectCard.innerHTML = `
+                    <img src="${project.imageUrl}" alt="Foto do Projeto">
+                    <h3>${project.title}</h3>
+                    <p><strong>Linguagem Usada:</strong> ${project.language}</p>
+                    <p><strong>Tipo de Projeto:</strong> ${project.type}</p>
+                    <p>${project.description}</p>
+                    <button class="delete" onclick="deleteProject(${project.id})">Excluir</button>
+                `;
+                projectsContainer.appendChild(projectCard);
+            });
+        }
+
+        async function deleteProject(id) {
+            try {
+                const response = await fetch(`http://localhost:3000/projetos/${id}`, {
+                    method: 'DELETE',
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    loadProjects(); // Recarregar os projetos após exclusão
+                } else {
+                    console.error(result.message);
+                }
+            } catch (error) {
+                console.error('Erro ao excluir o projeto:', error);
+            }
         }
     </script>
+    <script src="script.js"></script>
 </body>
 </html>

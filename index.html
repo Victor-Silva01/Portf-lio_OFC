@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Victor Emanuel - Portfólio</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-KyZXEAg3QhqLMpG8r+Knujsl+XIsnJ4mF7hd9zKc/9S1k8GmTLk5z60DmiHpu4z7fJSc0z1lP/t/2RVt5EoPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
     <div class="hero-header">
@@ -112,75 +112,11 @@
         </div>
     </section>
 
+    <!-- Status Message Element -->
+    <div id="status-message" style="display: none; padding: 10px; margin-top: 10px;"></div>
+
     <!-- Typed.js for typing text effect -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.10/typed.min.js"></script>
-    <script>
-        // Menu Responsivo
-        var togglebtn = document.querySelector(".togglebtn");
-        var nav = document.querySelector(".navlinks");
-
-        togglebtn.addEventListener("click", function() {
-            this.classList.toggle("click");
-            nav.classList.toggle("open");
-        });
-
-        // Efeito de Texto Digitado
-        var typed = new Typed(".input", {
-            strings: ["Frontend Developer", "Eng. Software", "Web Developer"],
-            typeSpeed: 70,
-            backSpeed: 55,
-            loop: true
-        });
-
-        // Exibir Projetos Salvos
-        document.addEventListener("DOMContentLoaded", function () {
-            const projectsContainer = document.getElementById("project-cards-container");
-            const projects = JSON.parse(localStorage.getItem('projects')) || [];
-
-            projects.forEach(function (projectCard) {
-                projectsContainer.innerHTML += projectCard;
-            });
-        });
-
-        // Função para Salvar Projetos
-        function saveProject() {
-            const title = document.getElementById("project-title").value;
-            const photo = document.getElementById("project-photo").files[0];
-            const language = document.getElementById("language-used").value;
-            const type = document.getElementById("project-type").value;
-            const description = document.getElementById("description").value;
-
-            if (!title || !photo || !language || !type || !description) {
-                alert("Por favor, preencha todos os campos!");
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const imageUrl = e.target.result;
-                const projectCard = `
-                    <div class="project-card">
-                        <img src="${imageUrl}" alt="Foto do Projeto">
-                        <h3>${title}</h3>
-                        <p><strong>Linguagem Usada:</strong> ${language}</p>
-                        <p><strong>Tipo de Projeto:</strong> ${type}</p>
-                        <p>${description}</p>
-                    </div>
-                `;
-
-                const projects = JSON.parse(localStorage.getItem('projects')) || [];
-                projects.push(projectCard);
-                localStorage.setItem('projects', JSON.stringify(projects));
-
-                // Limpar o formulário
-                document.getElementById("project-form").reset();
-            };
-
-            reader.readAsDataURL(photo);
-        }
-
-        // Adicionar um ouvinte ao botão de salvar
-        document.getElementById("save-button").addEventListener("click", saveProject);
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
