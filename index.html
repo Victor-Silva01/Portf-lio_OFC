@@ -118,5 +118,43 @@
     <!-- Typed.js for typing text effect -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.10/typed.min.js"></script>
     <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            loadProjects();
+        });
+
+        async function loadProjects() {
+            try {
+                const response = await fetch('http://localhost:3000/projetos');
+                const result = await response.json();
+
+                if (response.ok) {
+                    displayProjects(result.data);
+                } else {
+                    console.error(result.message);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar projetos:', error);
+            }
+        }
+
+        function displayProjects(projects) {
+            const projectsContainer = document.getElementById("project-cards-container");
+            projectsContainer.innerHTML = '';
+
+            projects.forEach(project => {
+                const projectCard = document.createElement('div');
+                projectCard.className = 'project-card';
+                projectCard.innerHTML = `
+                    <img src="${project.imageurl}" alt="Foto do Projeto">
+                    <h3>${project.title}</h3>
+                    <p><strong>Linguagem Usada:</strong> ${project.language}</p>
+                    <p><strong>Tipo de Projeto:</strong> ${project.type}</p>
+                    <p>${project.description}</p>
+                `;
+                projectsContainer.appendChild(projectCard);
+            });
+        }
+    </script>
 </body>
 </html>

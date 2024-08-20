@@ -1,7 +1,7 @@
 document.getElementById("save-button").addEventListener("click", async function() {
     const title = document.getElementById("project-title").value;
     const photo = document.getElementById("project-photo").files[0];
-    const language = document.getElementById("language-used").value;
+    const languages = Array.from(document.getElementById("language-used").selectedOptions).map(option => option.value);
     const type = document.getElementById("project-type").value;
     const description = document.getElementById("description").value;
 
@@ -10,10 +10,9 @@ document.getElementById("save-button").addEventListener("click", async function(
         return;
     }
 
-    // Usando FormData para enviar o arquivo junto com os dados do projeto
     const formData = new FormData();
     formData.append('title', title);
-    formData.append('language', language);
+    formData.append('languages', JSON.stringify(languages)); // Envia o array de linguagens como JSON
     formData.append('type', type);
     formData.append('description', description);
     formData.append('photo', photo);
@@ -27,7 +26,9 @@ document.getElementById("save-button").addEventListener("click", async function(
         const result = await response.json();
         if (result.status === 'success') {
             console.log('Projeto salvo com sucesso!');
-            displayProjects(); // Atualizar a lista de projetos
+            displayProjects('saved-projects-container');
+            displayProjects('my-projects-container');
+            displayProjects('project-cards-container');  // Adiciona a chamada para preencher a seção de projetos
         } else {
             console.error('Erro ao salvar projeto:', result.message);
         }
@@ -38,8 +39,7 @@ document.getElementById("save-button").addEventListener("click", async function(
     document.getElementById("project-form").reset();
 });
 
-// Função para exibir os projetos
-async function displayProjects() {
+async function displayProjects(containerId) {
     const apiUrl = 'http://localhost:3000/projetos'; // URL do backend
 
     try {
@@ -47,21 +47,25 @@ async function displayProjects() {
         const data = await response.json();
 
         if (data.status === 'success') {
-            const projectsContainer = document.getElementById('project-cards-container');
+            const projectsContainer = document.getElementById(containerId);
             projectsContainer.innerHTML = ''; // Limpa o conteúdo existente
 
             data.data.forEach(project => {
                 const projectDiv = document.createElement('div');
                 projectDiv.className = 'project-card';
-                
+
+                // Usa a URL da imagem ou uma imagem padrão
+                const imageUrl = project.imageUrl ? project.imageUrl : 'path/to/default-image.jpg';
+
                 projectDiv.innerHTML = `
-                    <img src="${project.imageUrl}" alt="Foto do Projeto">
+                    <img src="${imageUrl}" alt="Foto do Projeto">
                     <h3>${project.title}</h3>
-                    <p><strong>Linguagem Usada:</strong> ${project.language}</p>
+                    <p><strong>Linguagens Usadas:</strong> ${JSON.parse(project.languages).join(', ')}</p>
                     <p><strong>Tipo de Projeto:</strong> ${project.type}</p>
                     <p>${project.description}</p>
+                    <button class="delete" onclick="deleteProject(${project.id})">Excluir</button>
                 `;
-                
+
                 projectsContainer.appendChild(projectDiv);
             });
         } else {
@@ -76,5 +80,28 @@ async function displayProjects() {
     }
 }
 
-// Chama a função para exibir os projetos quando a página carrega
-document.addEventListener('DOMContentLoaded', displayProjects);
+async function deleteProject(projectId) {
+    try {
+        const response = await fetch(`/projetos/${projectId}`, {
+            method: 'DELETE'
+        });
+
+        const result = await response.json();
+        if (result.status === 'success') {
+            console.log('Projeto excluído com sucesso!');
+            displayProjects('saved-projects-container');
+            displayProjects('my-projects-container');
+            displayProjects('project-cards-container');  // Atualiza a seção de projetos após a exclusão
+        } else {
+            console.error('Erro ao excluir projeto:', result.message);
+        }
+    } catch (error) {
+        console.error('Erro ao excluir projeto:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    displayProjects('saved-projects-container');
+    displayProjects('my-projects-container');
+    displayProjects('project-cards-container');  // Carrega os projetos na seção de projetos ao carregar a página
+});

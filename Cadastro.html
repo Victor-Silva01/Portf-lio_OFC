@@ -206,7 +206,6 @@
             reader.onload = async function (e) {
                 const imageUrl = e.target.result;
                 
-                // Preparando os dados para envio ao backend
                 const projectData = {
                     title: title,
                     imageUrl: imageUrl,
@@ -226,12 +225,12 @@
 
                     const result = await response.json();
                     if (response.ok) {
-                        document.getElementById("success-message").style.display = "block"; // Exibir a mensagem de sucesso
+                        document.getElementById("success-message").style.display = "block";
                         setTimeout(() => {
-                            document.getElementById("success-message").style.display = "none"; // Ocultar a mensagem após 3 segundos
+                            document.getElementById("success-message").style.display = "none";
                         }, 3000);
-                        document.getElementById("project-form").reset(); // Limpa o formulário
-                        loadProjects(); // Recarregar os projetos para incluir o novo
+                        document.getElementById("project-form").reset();
+                        loadProjects();
                     } else {
                         console.error(result.message);
                     }
@@ -240,7 +239,7 @@
                 }
             };
 
-            reader.readAsDataURL(photo); // Convertendo a imagem em base64 para envio
+            reader.readAsDataURL(photo);
         }
 
         async function loadProjects() {
@@ -266,7 +265,7 @@
                 const projectCard = document.createElement('div');
                 projectCard.className = 'project-card';
                 projectCard.innerHTML = `
-                    <img src="${project.imageUrl}" alt="Foto do Projeto">
+                    <img src="${project.imageurl}" alt="Foto do Projeto">
                     <h3>${project.title}</h3>
                     <p><strong>Linguagem Usada:</strong> ${project.language}</p>
                     <p><strong>Tipo de Projeto:</strong> ${project.type}</p>
@@ -278,19 +277,24 @@
         }
 
         async function deleteProject(id) {
+            if (!confirm('Você tem certeza que deseja excluir este projeto?')) {
+                return;
+            }
+
             try {
                 const response = await fetch(`http://localhost:3000/projetos/${id}`, {
-                    method: 'DELETE',
+                    method: 'DELETE'
                 });
 
                 const result = await response.json();
                 if (response.ok) {
-                    loadProjects(); // Recarregar os projetos após exclusão
+                    alert('Projeto excluído com sucesso!');
+                    loadProjects();
                 } else {
                     console.error(result.message);
                 }
             } catch (error) {
-                console.error('Erro ao excluir o projeto:', error);
+                console.error('Erro ao excluir projeto:', error);
             }
         }
     </script>
